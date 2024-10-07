@@ -1,0 +1,65 @@
+
+#Title{
+    background-color:  darkblue;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+#layout_container{
+    background-color:  lightgray;
+    height: 100%;
+}
+#log_in_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+#log_in_box{
+    border: 3px solid white;
+    border-radius: 10px;
+    background-color: white;
+    display: inline-block;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 100px;
+
+}
+
+#log_in_text{
+    margin-right: 10px;
+    font-size: 30px;
+}
+html, body {
+    height: 100%;
+  }
+#user_image{
+    width: 40%;
+    height: auto;
+}
+#username_text{
+    display:flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+#receipt_row{
+    margin-top: 30px;
+}
+#receipt_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+#receipt{
+    border: 3px solid white;
+    border-radius: 10px;
+    background-color: white;
+    display: inline-block;
+    padding-left: 30px;
+    padding-right: 30px;
+}

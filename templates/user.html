@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script type = "module" src="{{ url_for('static', filename = 'user.js') }}"></script>
+<script>
+    var username={{username|tojson}}; 
+</script>
+<div id="user_page">
+    <div class="row">
+        <div class="col-md-6" style="display:inline-block;text-align:center;">
+            <img id="user_image">
+        </div>
+        <div class="col-md-6" id="username_text"></div>
+    </div>
+    <div class="row" id="receipt_row">
+        <div class="col-md-4" id="receipt_container">
+            <div id="receipt">
+                <div><b>Vendor: </b>Costco</div>
+                <div><b>Date: </b>1/3/2001</div>
+                <div><b>Items:</b></div>
+                <div>Hotdog 1.50$</div>
+                <div>Hotdog 1.50$</div>
+                <div>Chicken Bake 3.00$</div>
+                <div><b>Total: </b>6.00$</div>
+
+            </div>
+        </div>
+        <div class="col-md-4" id="receipt_container">
+            <div id="receipt">
+                <div><b>Vendor: </b>Costco</div>
+                <div><b>Date: </b>1/2/2001</div>
+                <div><b>Items:</b></div>
+                <div>Hotdog 1.50$</div>
+                <div>Hotdog 1.50$</div>
+                <div><b>Total: </b>3.00$</div>
+
+            </div>
+        </div>
+        <div class="col-md-4" id="receipt_container">
+            <div id="receipt">
+                <div><b>Vendor: </b>Costco</div>
+                <div><b>Date: </b>1/1/2001</div>
+                <div><b>Items:</b></div>
+                <div>Hotdog 1.50$</div>
+                <div><b>Total: </b>1.50$</div>
+
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

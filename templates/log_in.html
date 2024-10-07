@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script type = "module" src="{{ url_for('static', filename = 'log_in.js') }}"></script>
+
+<div id="log_in_container">
+    <div id="log_in_box">
+        <div style="font-size: 40px; font-weight: bold;">Login to view receipts</div>
+
+            <div id="log_in_text">username</div>
+            <textarea id="username_input" rows="1" cols="20" placeholder="username"></textarea>
+            <div id="log_in_text">password</div>
+            <textarea id="password_input" rows="1" cols="20" placeholder="password"></textarea>
+            <div>           
+                 <button id="log_in_button" style="margin-top: 50px;">Login</button>
+            </div>
+        <div id="log_in_error_text" style="color: red;"></div>
+    </div>
+
+
+</div>
+{% endblock %}
