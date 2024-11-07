@@ -1,24 +1,32 @@
 # COMS-6998-Blockchain-Project
+<ul>
+Tools:
+<li>Python Web3 library for interacting with contract from web app</li>
+<li>Remix IDE and Solidity for writing smart contract and testing</li>
+<li>Flask and Django for Web App</li>
+</ul>
 
-Solidity for smart contract logic
-Python Web3 library for interacting with contract from web app
-Remix IDE for writing smart contract and testing
+# Sprint 1
+Brendon:
+Make a nice UI
 
-Kevin and Brendon: 
-Fix authentication
-Create User Info Database
-Create Transaction Database (include test items... items and price)
-Add function to create new receipt and visualize it
-Integrate front end and back end
+Kevin: 
+</ul>
+<li>Fix authentication</li>
+<li>Create User Info Database</li>
+<li>Create Transaction Database (include test items... items and price)</li>
+<li>Add function to create new receipt and visualize it</li>
+<li>Integrate front end and back end</li>
+</ul>
 
-Divyang
+Divyang:
 Whenever transaction created, add it to smart contract
 
-Amrit & Kabir & Andy (as needed)
-Move funds from buyer's account to smart contract, hold in escrow until return window expires and then move to seller's account
-Logic for accepting/denying a return
+Amrit & Kabir & Andy (as needed):
+<li>Move funds from buyer's account to smart contract, hold in escrow until return window expires and then move to seller's account</li>
+<li>Logic for accepting/denying a return</li>
 
-Andy
+Andy:
 Deployment and Test Network Stuff
 
 
