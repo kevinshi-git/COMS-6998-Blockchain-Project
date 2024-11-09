@@ -1,20 +1,20 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<script type = "module" src="{{ url_for('static', filename = 'log_in.js') }}"></script>
+<script type = "module" src="{{ url_for('static', filename = 'new_user.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
 
 <div id="log_in_container">
     <div id="log_in_box">
-        <div style="font-size: 40px; font-weight: bold;">Login to view receipts</div>
+        <div style="font-size: 40px; font-weight: bold;">Create Account</div>
 
             <div id="log_in_text">username</div>
             <textarea id="username_input" rows="1" cols="20" placeholder="username"></textarea>
             <div id="log_in_text">password</div>
             <textarea id="password_input" rows="1" cols="20" placeholder="password"></textarea>
             <div>           
-                 <button id="log_in_button" style="margin-top: 50px;">Login</button>
-                 <button id="new_user_button" style="margin-top: 50px;">Create New User</button>
+                 <button id="sign_up_button" style="margin-top: 50px;">Sign up</button>
+                 <button id="return_to_login_button" style="margin-top: 50px;">Return To Login</button>
             </div>
         <div id="log_in_error_text" style="color: red;"></div>
     </div>
