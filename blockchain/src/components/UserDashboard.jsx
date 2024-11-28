@@ -2,11 +2,73 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Receipt from './Receipt';
 import './UserDashboard.css';
+import CreateTransaction from './CreateTransaction';
 
 const UserDashboard = () => {
-  const { username } = useParams();
-  const [receipts, setReceipts] = useState([]);
+  const { username, address } = useParams();
+  const [sellerReceipts, setSellerReceipts] = useState([]);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [buyerReceipts, setBuyerReceipts] = useState([]);
+
+
+  const [currentBalance,setCurrentBalance]=useState(0)
+  
+
+  const getReceipts = async () =>{//calls apis to get data about users needed for website
+    var seller_body={'seller_address': address}
+    try {
+      const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/get_seller_receipts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(seller_body),
+      });
+
+      const data = await response.json();
+      console.log("get_seller_receipts",data);
+      if (data.success){
+        var seller_receipts=data['all_receipts'];
+        for (let i=0;i<seller_receipts.length;i++){
+          seller_receipts[i]['id']=i+1;
+        }
+        console.log("seller_receipts",seller_receipts)
+        setSellerReceipts(seller_receipts)
+      }
+      
+     
+    } catch (err) {
+      console.log("dafasdf",err);
+    }
+
+    var buyer_body={'buyer_address': address}
+    try {
+      const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/get_buyer_receipts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(buyer_body),
+      });
+
+      const data2 = await response.json();
+      console.log("get_buyer_receipts",data2);
+      if (data2.success){
+        var buyer_receipts=data2['all_receipts'];
+        for (let i=0;i<buyer_receipts.length;i++){
+          buyer_receipts[i]['id']=i+1;
+        }
+        console.log("buyer_receipts",buyer_receipts)
+        setBuyerReceipts(buyer_receipts)
+      }
+      
+     
+    } catch (err) {
+      console.log("dafasdf",err);
+    }
+    
+    }
+
 
 //   useEffect(() => {
 //     // Here you would typically fetch the user's receipts from your backend
@@ -15,6 +77,7 @@ const UserDashboard = () => {
 //       // Your receipt data here
 //     ]);
 //   }, [username]);
+/* 
     useEffect(() => {
     // Dummy data for testing
     setReceipts([
@@ -80,6 +143,33 @@ const UserDashboard = () => {
       }
     ]);
   }, [username]);
+*/
+  const getUserBalance = async () => {
+      try {
+        const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/get_all_accounts_in_network', {
+          method: 'GET',
+        });
+  
+        const data = await response.json();
+        console.log("get_user_data response",data);
+        data["all_accounts"].forEach(function (item) {
+          if (item['account_address']==address){
+            setCurrentBalance(item['balance'])
+          }
+        })
+       
+      } catch (err) {
+        console.log("dafasdf",err);
+      }
+
+  }
+  useEffect(()=> {
+    getUserBalance();
+  },[])
+
+  useEffect(()=> {
+    getReceipts();
+  },[username])
 
   return (
     <div className="dashboard-container">
@@ -89,10 +179,12 @@ const UserDashboard = () => {
           alt="User profile" 
           className="user-image" 
         />
-        <h2>{username}'s Receipt History</h2>
+        <h2>Account Balance: {currentBalance}</h2>
+        
       </div>
 
       <div className="receipts-container">
+      <h2 style={{color: 'black'}}>{username}'s Sold Items</h2>
         {selectedReceipt ? (
           <>
             <button 
@@ -105,7 +197,7 @@ const UserDashboard = () => {
           </>
         ) : (
           <div className="receipts-grid">
-            {receipts.map((receipt) => (
+            {sellerReceipts.map((receipt) => (
               <div 
                 key={receipt.id}
                 className="receipt-card"
@@ -119,13 +211,53 @@ const UserDashboard = () => {
                 </div>
                 <div className="receipt-card-body">
                   <p>Transaction: {receipt.transaction_hash.slice(0, 10)}...</p>
-                  <p>{new Date(receipt.purchase_time * 1000).toLocaleDateString()}</p>
+                  <p>Item: {receipt.item_name}</p>
+                  <p>{receipt.purchase_time}</p>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      <div className="receipts-container">
+      <h2 style={{color: 'black'}}>{username}'s Bought Items</h2>
+        {selectedReceipt ? (
+          <>
+            <button 
+              className="back-button"
+              onClick={() => setSelectedReceipt(null)}
+            >
+              ← Back to List
+            </button>
+            <Receipt receipt={selectedReceipt} />
+          </>
+        ) : (
+          <div className="receipts-grid">
+            {buyerReceipts.map((receipt) => (
+              <div 
+                key={receipt.id}
+                className="receipt-card"
+                onClick={() => setSelectedReceipt(receipt)}
+              >
+                <div className="receipt-card-header">
+                  <span className={`status-badge ${receipt.status.toLowerCase()}`}>
+                    {receipt.status}
+                  </span>
+                  <span className="amount">{receipt.amount} ETH</span>
+                </div>
+                <div className="receipt-card-body">
+                  <p>Transaction: {receipt.transaction_hash.slice(0, 10)}...</p>
+                  <p>Item: {receipt.item_name}</p>
+                  <p>{receipt.purchase_time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <CreateTransaction current_user={username} address={address}/>
     </div>
   );
 };

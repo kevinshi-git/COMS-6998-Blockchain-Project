@@ -8,28 +8,29 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  
 
   const handleLogin = async () => {
-    const hashedPassword = sha512(password);
     
     try {
-      const response = await fetch('/verify_login', {
+      const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/verify_login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username,
-          password: hashedPassword,
+          password,
         }),
       });
 
       const data = await response.json();
-      
-      if (data.data) {
-        navigate(`/user/${username}`);
+      console.log(data)
+      if (data.success) {
+        const address=data.message
+        navigate(`/user/${username}/${address}`);
       } else {
-        setError('Wrong username or password');
+        setError(data.message);
       }
     } catch (err) {
       setError('An error occurred during login');

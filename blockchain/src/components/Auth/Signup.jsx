@@ -8,6 +8,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [returnWindow,setReturnWindow]=useState(0)
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -16,29 +17,30 @@ const Signup = () => {
       return;
     }
 
-    const hashedPassword = sha512(password);
-    
     try {
-      const response = await fetch('/create_new_user', {
+      const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/create_new_user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username,
-          password: hashedPassword,
+          password,
+          returnWindow,
         }),
       });
 
       const data = await response.json();
+      console.log(data)
       
-      if (data.data) {
+      if (data.success) {
         setSuccess('Account Successfully Created');
         setUsername('');
         setPassword('');
+        setReturnWindow(0);
         setTimeout(() => navigate('/'), 2000);
       } else {
-        setError('Username already exists');
+        setError(data.message);
       }
     } catch (err) {
       setError('An error occurred during signup');
@@ -64,6 +66,16 @@ const Signup = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="input-group">
+          <input
+            type="number"
+            placeholder="Return Window (days)"
+            step='1'
+            min='0'
+            max='20' 
+            onChange={(e) => setReturnWindow(Number(e.target.value))}
           />
         </div>
         {error && <div className="error-text">{error}</div>}

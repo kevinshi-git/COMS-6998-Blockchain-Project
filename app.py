@@ -3,9 +3,12 @@ from flask import render_template
 from flask import Response, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, migrate
-
+import time
+from flask_cors import CORS #1 
 
 app = Flask(__name__)
+
+CORS(app) #3
 app.debug = True
 
 # adding configuration for using a sqlite database
@@ -62,6 +65,9 @@ def create_new_user():
 
     return jsonify(data = res)
 
+@app.route('/time')
+def get_current_time():
+    return {'time': time.time()}
 if __name__ == '__main__':
    app.run(debug = True)
 
