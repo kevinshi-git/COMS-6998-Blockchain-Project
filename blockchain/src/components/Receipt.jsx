@@ -36,7 +36,7 @@ const Receipt = ({ receipt }) => {
 
         <div className="receipt-row">
           <div className="receipt-label">Purchase Time</div>
-          <div className="receipt-value">{formatDate(receipt.purchase_time)}</div>
+          <div className="receipt-value">{receipt.purchase_time.toLocaleString()}</div>
         </div>
 
         <div className="receipt-row clickable" onClick={() => copyToClipboard(receipt.buyer_address)}>

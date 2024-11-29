@@ -73,6 +73,18 @@
   color: #dc3545;
 }
 
+
+.status-badge.funds.released.to.seller {
+  background: #fde7e9;
+  color: #dc3545;
+}
+
+
+.status-badge.returned {
+  background: #fde7e9;
+  color: #dc3545;
+}
+
 .amount {
   font-weight: bold;
   color: #2c3e50;
