@@ -126,82 +126,6 @@ const UserDashboard = () => {
     }
     
     }
-
-
-//   useEffect(() => {
-//     // Here you would typically fetch the user's receipts from your backend
-//     // For now, we'll use dummy data
-//     setReceipts([
-//       // Your receipt data here
-//     ]);
-//   }, [username]);
-/* 
-    useEffect(() => {
-    // Dummy data for testing
-    setReceipts([
-      {
-        id: 1,
-        buyer_address: "0x1234567890abcdef1234567890abcdef12345678",
-        seller_address: "0xabcdef1234567890abcdef1234567890abcdef12",
-        seller_contract_address: "0x7890abcdef1234567890abcdef1234567890abcd",
-        amount: "0.5",
-        purchase_time: Math.floor(Date.now() / 1000),
-        transaction_hash: "0xdef1234567890abcdef1234567890abcdef123456",
-        block_number: "12345678",
-        status: "Success",
-        receipt_index: "0"
-      },
-      {
-        id: 2,
-        buyer_address: "0x9876543210abcdef1234567890abcdef12345678",
-        seller_address: "0xfedcba1234567890abcdef1234567890abcdef12",
-        seller_contract_address: "0x5432abcdef1234567890abcdef1234567890abcd",
-        amount: "1.2",
-        purchase_time: Math.floor(Date.now() / 1000) - 86400, // 1 day ago
-        transaction_hash: "0xabc1234567890abcdef1234567890abcdef123456",
-        block_number: "12345679",
-        status: "Failed",
-        receipt_index: "1"
-      },
-      {
-        id: 3,
-        buyer_address: "0x5555567890abcdef1234567890abcdef12345678",
-        seller_address: "0x6666cf1234567890abcdef1234567890abcdef12",
-        seller_contract_address: "0x7777abcdef1234567890abcdef1234567890abcd",
-        amount: "0.75",
-        purchase_time: Math.floor(Date.now() / 1000) - 172800, // 2 days ago
-        transaction_hash: "0xeee1234567890abcdef1234567890abcdef123456",
-        block_number: "12345680",
-        status: "Success",
-        receipt_index: "2"
-      },
-      {
-        id: 4,
-        buyer_address: "0x1111567890abcdef1234567890abcdef12345678",
-        seller_address: "0x2222cf1234567890abcdef1234567890abcdef12",
-        seller_contract_address: "0x3333abcdef1234567890abcdef1234567890abcd",
-        amount: "2.5",
-        purchase_time: Math.floor(Date.now() / 1000) - 259200, // 3 days ago
-        transaction_hash: "0xfff1234567890abcdef1234567890abcdef123456",
-        block_number: "12345681",
-        status: "Success",
-        receipt_index: "3"
-      },
-      {
-        id: 5,
-        buyer_address: "0x4444567890abcdef1234567890abcdef12345678",
-        seller_address: "0x5555cf1234567890abcdef1234567890abcdef12",
-        seller_contract_address: "0x6666abcdef1234567890abcdef1234567890abcd",
-        amount: "0.33",
-        purchase_time: Math.floor(Date.now() / 1000) - 345600, // 4 days ago
-        transaction_hash: "0xddd1234567890abcdef1234567890abcdef123456",
-        block_number: "12345682",
-        status: "Failed",
-        receipt_index: "4"
-      }
-    ]);
-  }, [username]);
-*/
   const getUserBalance = async () => {
       try {
         const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/get_all_accounts_in_network', {
@@ -228,6 +152,11 @@ const UserDashboard = () => {
   useEffect(()=> {
     getData();
   },[username])
+
+  const handleTransactionComplete = () => {
+    getData();
+    getUserBalance();
+  };
 
   return (
     <div className="dashboard-container">
@@ -325,7 +254,11 @@ const UserDashboard = () => {
         )}
       </div>
 
-      <CreateTransaction current_user={username} address={address}/>
+      <CreateTransaction 
+        current_user={username} 
+        address={address}
+        onTransactionComplete={handleTransactionComplete}
+      />
     </div>
   );
 };

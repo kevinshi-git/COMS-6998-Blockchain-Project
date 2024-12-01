@@ -1,15 +1,14 @@
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
+import './CreateTransaction.css';
 
-
-
-
-function CreateTransaction({current_user, address}){
+function CreateTransaction({current_user, address, onTransactionComplete}){
     const [price, setPrice] = useState(0);
     const [item, setItem] = useState('');
-    const [buyer,setBuyer] = useState({});
-    const [message,setMessage] = useState('');
-    const [allBuyers,setAllBuyers]=useState([]);
+    const [buyer, setBuyer] = useState({});
+    const [message, setMessage] = useState('');
+    const [allBuyers, setAllBuyers] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const get_available_buyers = async () =>{
         try {
@@ -40,63 +39,126 @@ function CreateTransaction({current_user, address}){
             setMessage('Please name the item and choose a buyer');
             return;
         }
-        var body={
-            'seller_address':address,
-            'buyer_address':buyer['value'],
-            'amount_eth': price,
-            'item_name':item      
-            };
-        console.log("body: ",body)
-        const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/issue_receipt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+        setIsSubmitting(true);
+        try {
+            var body={
+                'seller_address':address,
+                'buyer_address':buyer['value'],
+                'amount_eth': price,
+                'item_name':item      
+                };
+            console.log("body: ",body)
+            const response = await fetch('https://w6998-backend-2-745799261495.us-east4.run.app/issue_receipt', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          });
 
-      const data = await response.json();
-      console.log("transaction result: ",data)
-      if (data.success){
-        setMessage('Successfully Created Transaction')
-      }
-      else{
-        setMessage('Error Creating Transaction')
-      }
-        setItem("")
+          const data = await response.json();
+          console.log("transaction result: ",data)
+          if (data.success){
+            setMessage('Successfully Created Transaction')
+            setItem("")
+            setBuyer({})
+            setPrice(0)
+            onTransactionComplete()
+          }
+          else{
+            setMessage('Error Creating Transaction')
+          }
+        } catch (error) {
+            setMessage('Error: ' + error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     }
   
-      return (<div id='transactioncontainer' style={{color: 'black', border: 'solid black'}}>
-        <div id='transactionrow'>
-        <label id='transaction_item_label'>Transaction Item:      </label>
-        <input type='text' id='item_input' value={item} onChange={(e) => setItem(e.target.value)}></input>
-        </div>
-  
-        <div id='transactionrow'>
-        <label id='transaction_item_price'>Price (in ETH):      </label>
-        <input type='number'
-                step='0.1'
-                min='0'
-                max='20' 
-                id='item_input' 
-                placeholder='0'
-                onChange={(e) => setPrice(parseFloat(e.target.value))}></input>
-        </div>
-  
-  
-        <div id='transactionrow'>
-        <label id='transaction_item_buyer'>Buyer:      </label>
-        <Select name='form-field-name' options={allBuyers} onChange={(val) => setBuyer(val)}/>      
-        </div>
+    const customSelectStyles = {
+        control: (base) => ({
+            ...base,
+            minHeight: '40px',
+            background: '#fff',
+            borderColor: '#e2e8f0',
+            boxShadow: 'none',
+            '&:hover': {
+                borderColor: '#cbd5e0'
+            }
+        }),
+        option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected ? '#4299e1' : state.isFocused ? '#ebf8ff' : null,
+            ':active': {
+                backgroundColor: '#4299e1'
+            }
+        })
+    };
 
-        <div id='transactionrow'>
-        <button onClick={submitTransaction}>Submit</button>
-        </div>
+    return (
+        <div className="transaction-card">
+            <h2 className="transaction-title">Create New Transaction</h2>
+            
+            <div className="form-container">
+                <div className="form-group">
+                    <label className="form-label">Item Name</label>
+                    <input 
+                        type="text"
+                        className="form-input"
+                        value={item}
+                        onChange={(e) => setItem(e.target.value)}
+                        placeholder="Enter item name"
+                    />
+                </div>
 
-        <div id='response_message'>{message}</div>
-  
-  
-        </div>)
-    }
+                <div className="form-group">
+                    <label className="form-label">Price (ETH)</label>
+                    <input 
+                        type="number"
+                        className="form-input"
+                        step="0.1"
+                        min="0"
+                        max="20"
+                        value={price}
+                        onChange={(e) => setPrice(parseFloat(e.target.value))}
+                        placeholder="0.0"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Select Buyer</label>
+                    <Select
+                        className="buyer-select"
+                        options={allBuyers}
+                        value={buyer}
+                        onChange={(val) => setBuyer(val)}
+                        styles={customSelectStyles}
+                        placeholder="Choose a buyer..."
+                        isSearchable
+                    />
+                </div>
+
+                <button 
+                    className={`submit-button ${isSubmitting ? 'submitting' : ''}`}
+                    onClick={submitTransaction}
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? (
+                        <>
+                            <span className="spinner"></span>
+                            Creating...
+                        </>
+                    ) : 'Create Transaction'}
+                </button>
+
+                {message && (
+                    <div className={`message ${message.includes('Success') ? 'success' : 'error'}`}>
+                        {message}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
 
 export default CreateTransaction; 
