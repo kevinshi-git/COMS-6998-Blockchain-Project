@@ -160,92 +160,131 @@ const UserDashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="user-profile">
-        <img 
-          src="https://as2.ftcdn.net/v2/jpg/04/10/43/77/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" 
-          alt="User profile" 
-          className="user-image" 
-        />
-        <h2>Account Balance: {currentBalance}</h2>
-      </div>
-
-      <div className="receipts-container">
-        <h2 style={{color: 'black'}}>{username}'s Sold Items: {sellerReceipts.length}</h2>
-        <div className="receipts-grid">
-          {sellerReceipts.map((receipt) => (
-            <div 
-              key={receipt.id}
-              className="receipt-card"
-              onClick={() => setSelectedReceipt(receipt)}
-            >
-              <div className="receipt-card-header">
-                <span className={`status-badge ${receipt.status.toLowerCase()}`}>
-                  {receipt.status}
-                </span>
-                <span className="amount">+{receipt.amount} ETH</span>
-              </div>
-              <div className="receipt-card-body">
-                <p>Buyer: {receipt.buyer_username}</p>
-                <p>Seller: {receipt.seller_username}</p>
-                <p>Transaction: {receipt.transaction_hash.slice(0, 10)}...</p>
-                <p>Item: {receipt.item_name}</p>
-                <p>Purchase Time: {receipt.purchase_time.toLocaleString()}</p>
-                <p>Return Deadline: {receipt.return_deadline.toLocaleString()}</p>
-              </div>
-              <ActionButton 
-                receipt_status={receipt.status}  
-                transaction_hash={receipt.transaction_hash} 
-                is_seller={true} 
-                return_deadline={receipt.return_deadline} 
-              />
+      <div className="dashboard-header">
+        <div className="header-content">
+          <div className="user-profile">
+            <img 
+              src="https://as2.ftcdn.net/v2/jpg/04/10/43/77/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" 
+              alt="User profile" 
+              className="user-image" 
+            />
+            <div className="user-details">
+              <h1>{username}</h1>
+              <h3>Balance: {currentBalance} ETH</h3>
             </div>
-          ))}
+          </div>
+          
+          <div className="transaction-section">
+            <CreateTransaction 
+              current_user={username} 
+              address={address}
+              onTransactionComplete={handleTransactionComplete}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="receipts-container">
-        <h2 style={{color: 'black'}}>{username}'s Bought Items: {buyerReceipts.length}</h2>
-        <div className="receipts-grid">
-          {buyerReceipts.map((receipt) => (
-            <div 
-              key={receipt.id}
-              className="receipt-card"
-              onClick={() => setSelectedReceipt(receipt)}
-            >
-              <div className="receipt-card-header">
-                <span className={`status-badge ${receipt.status.toLowerCase()}`}>
-                  {receipt.status}
-                </span>
-                <span className="amount">-{receipt.amount} ETH</span>
-              </div>
-              <div className="receipt-card-body">
-                <p>Buyer: {receipt.buyer_username}</p>
-                <p>Seller: {receipt.seller_username}</p>
-                <p>Transaction: {receipt.transaction_hash.slice(0, 10)}...</p>
-                <p>Item: {receipt.item_name}</p>
-                <p>Purchase Time: {receipt.purchase_time.toLocaleString()}</p>
-                <p>Return Deadline: {receipt.return_deadline.toLocaleString()}</p>
-              </div>
-              <ActionButton 
-                receipt_status={receipt.status} 
-                transaction_hash={receipt.transaction_hash} 
-                is_seller={false} 
-                return_deadline={receipt.return_deadline} 
-              />
+      <div className="transactions-section">
+        <div className="section-header">
+          <h2>Transaction History</h2>
+          <div className="transaction-tabs">
+            <div className="tab-counts">
+              <span className="count-badge">Sold: {sellerReceipts.length}</span>
+              <span className="count-badge">Bought: {buyerReceipts.length}</span>
             </div>
-          ))}
+          </div>
+        </div>
+
+        <div className="receipts-wrapper">
+          <div className="receipts-container">
+            <h3>Items Sold</h3>
+            <div className="receipts-grid">
+              {sellerReceipts.map((receipt) => (
+                <div 
+                  key={receipt.id}
+                  className="receipt-card seller-card"
+                  onClick={() => setSelectedReceipt(receipt)}
+                >
+                  <div className="receipt-card-header">
+                    <h4>{receipt.item_name}</h4>
+                    <span className="amount positive">+{receipt.amount} ETH</span>
+                  </div>
+                  <div className="receipt-status">
+                    <span className={`status-badge ${receipt.status.toLowerCase()}`}>
+                      {receipt.status}
+                    </span>
+                  </div>
+                  <div className="receipt-card-body">
+                    <div className="receipt-info">
+                      <p><strong>Buyer:</strong> {receipt.buyer_username}</p>
+                      <p><strong>Date:</strong> {receipt.purchase_time.toLocaleDateString()}</p>
+                    </div>
+                    <div className="receipt-deadline">
+                      <p>Return window ends: {receipt.return_deadline.toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div className="receipt-actions">
+                    <ActionButton 
+                      receipt_status={receipt.status}  
+                      transaction_hash={receipt.transaction_hash} 
+                      is_seller={true} 
+                      return_deadline={receipt.return_deadline} 
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="receipts-container">
+            <h3>Items Bought</h3>
+            <div className="receipts-grid">
+              {buyerReceipts.map((receipt) => (
+                <div 
+                  key={receipt.id}
+                  className="receipt-card buyer-card"
+                  onClick={() => setSelectedReceipt(receipt)}
+                >
+                  <div className="receipt-card-header">
+                    <h4>{receipt.item_name}</h4>
+                    <span className="amount negative">-{receipt.amount} ETH</span>
+                  </div>
+                  <div className="receipt-status">
+                    <span className={`status-badge ${receipt.status.toLowerCase()}`}>
+                      {receipt.status}
+                    </span>
+                  </div>
+                  <div className="receipt-card-body">
+                    <div className="receipt-info">
+                      <p><strong>Seller:</strong> {receipt.seller_username}</p>
+                      <p><strong>Date:</strong> {receipt.purchase_time.toLocaleDateString()}</p>
+                    </div>
+                    <div className="receipt-deadline">
+                      <p>Return window ends: {receipt.return_deadline.toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div className="receipt-actions">
+                    <ActionButton 
+                      receipt_status={receipt.status} 
+                      transaction_hash={receipt.transaction_hash} 
+                      is_seller={false} 
+                      return_deadline={receipt.return_deadline} 
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Modal for detailed view */}
+      {/* Modal remains the same */}
       {selectedReceipt && (
         <div className="modal-overlay" onClick={() => setSelectedReceipt(null)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Transaction Details</h2>
-              <button className="modal-close" onClick={() => setSelectedReceipt(null)}>
-                ×
-              </button>
+              <button className="modal-close" onClick={() => setSelectedReceipt(null)}>×</button>
             </div>
             <div className="modal-body">
               <Receipt receipt={selectedReceipt} />
@@ -253,12 +292,6 @@ const UserDashboard = () => {
           </div>
         </div>
       )}
-
-      <CreateTransaction 
-        current_user={username} 
-        address={address}
-        onTransactionComplete={handleTransactionComplete}
-      />
     </div>
   );
 };
