@@ -29,6 +29,10 @@ const Receipt = ({ receipt }) => {
       </div>
 
       <div className="receipt-body">
+      <div className="receipt-row">
+          <div className="receipt-label">Item Name</div>
+          <div className="receipt-value">{receipt.item_name}</div>
+        </div>
         <div className="receipt-row">
           <div className="receipt-label">Amount</div>
           <div className="receipt-value">{receipt.amount} ETH</div>
