@@ -6,6 +6,11 @@ Tools:
 <li>Flask and Django for Web App</li>
 </ul>
 
+how to run:
+1: go to "blockchain" folder
+2: run command "npm install"
+3: run command "npm run dev"
+
 # Sprint 1
 
 Brendon:
